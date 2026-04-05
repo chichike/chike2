@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHIKE_CREATIVE_SYSTEM // Explorer v2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 全新鲜艳配色方案 */
+            --page-bg: #B0E0E6;         /* 天蓝色 (页面背景) */
+            --window-frame: #00CED1;   /* 湖蓝色 (窗口外框) */
+            --window-content: #E0FFFF; /* 极淡蓝 (内容区背景) */
+            --accent-primary: #FFBF00;  /* 琥珀黄 (主点缀) */
+            --accent-secondary: #FF5733; /* 珊瑚红 (强调/hover) */
+            
+            /* 文本颜色 */
+            --text-on-light: #003366;  /* 深蓝 (内容文本) */
+            --text-on-dark: #FFFFFF;   /* 白色 (页眉/按钮文本) */
+            
+            /* 边框定义 */
+            --border-size: 4px;
+            --sub-border-size: 2px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Press Start 2P', cursive;
+            image-rendering: pixelated; /* 核心：保持像素锐利 */
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 页面不滚动 */
+        }
+
+        /* 核心：全屏主窗口 */
+        #main-window {
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            background-color: var(--window-content);
+            border: var(--border-size) solid var(--text-on-light);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+            position: relative;
+            display: grid;
+            grid-template-rows: auto auto 1fr auto; /* 四行布局：页眉, 导航, 内容, 页脚 */
+            overflow: hidden; /* 内部滚动 */
+        }
+
+        /* 页眉：系统状态栏 */
+        header {
+            background-color: var(--text-on-light);
+            padding: 10px 20px;
+            border-bottom: var(--sub-border-size) solid var(--accent-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .system-status {
+            font-size: 14px;
+            color: var(--accent-primary);
+            animation: glitch 1.5s infinite;
+        }
+
+        @keyframes glitch {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; color: var(--accent-secondary); }
+            100% { opacity: 1; }
+        }
+
+        .system-title {
+            font-size: 10px;
+            color: var(--text-on-dark);
+        }
+
+        /* 导航栏 */
+        nav {
+            background-color: var(--window-frame);
+            padding: 15px;
+            border-bottom: var(--sub-border-size) solid var(--text-on-light);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: var(--accent-primary);
+            border: var(--sub-border-size) solid var(--text-on-light);
+            color: var(--text-on-light);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 10px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background-color: var(--accent-secondary);
+            color: var(--text-on-dark);
+            box-shadow: 4px 4px 0px inset rgba(0,0,0,0.2);
+            transform: translate(2px, 2px);
+        }
+
+        /* 内容区 (核心：可塑性) */
+        #content-area {
+            flex: 1;
+            overflow-y: auto; /* 这里滚动 */
+            padding: 20px;
+            color: var(--text-on-light);
+        }
+
+        .content-section {
+            display: none;
+            line-height: 1.8;
+            font-size: 10px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: contentFadeIn 0.3s;
+        }
+
+        @keyframes contentFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 文档/项目 卡片 (方便后期添加) */
+        .doc-card {
+            border: var(--sub-border-size) solid var(--text-on-light);
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #FFFFFF;
+            box-shadow: 4px 4px 0px var(--window-frame);
+        }
+
+        .doc-card:hover {
+            border-color: var(--accent-secondary);
+            box-shadow: 6px 6px 0px var(--accent-secondary);
+        }
+
+        .doc-card h3 {
+            border-bottom: var(--sub-border-size) dotted var(--window-frame);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: #2D2D2D;
+            color: #C1FFC1;
+            display: block;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent-secondary);
+            overflow-x: auto;
+            font-size: 8px;
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--window-frame);
+            color: var(--text-on-light);
+            padding: 10px 20px;
+            font-size: 8px;
+            text-align: center;
+            border-top: var(--sub-border-size) solid var(--text-on-light);
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="main-window">
+    <header>
+        <div class="system-title">USER_@CHIKE // EXPLORER_GUI_v2.0</div>
+        <div class="system-status">> SYSTEM_OK [ONLINE]</div>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="showSection('home')">[ 主页 ]</button>
+        <button class="nav-btn" onclick="showSection('docs')">[ 技术文档 ]</button>
+        <button class="nav-btn" onclick="showSection('projects')">[ 核心代码 ]</button>
+        <button class="nav-btn" onclick="showSection('about')">[ 关于我 ]</button>
+    </nav>
+
+    <main id="content-area">
+
+        <section id="home" class="content-section active">
+            <h2>欢迎来到我的私人协议终端。</h2>
+            <br>
+            <p>> 状态: 架构重构已完成。界面已从 CRT 模式升级为鲜艳的 GUI 模式。</p>
+            <br>
+            <div class="doc-card">
+                <h3>最近更新</h3>
+                <p>已成功部署视觉识别框架 v2.0，引入了深度学习后处理。锁定速度提升 25%。</p>
+                <code>// 新增了一个多线程检测逻辑<br>void EnableMultiThreadedDetection();</code>
+            </div>
+        </section>
+
+        <section id="docs" class="content-section">
+            <div class="doc-card">
+                <h3># 001 Ubuntu / ROS 2 环境配置指南</h3>
+                <p>关于 24.04 驱动冲突的底层映射逻辑分析。重点：如何手动加载内核模块避免内核恐慌。</p>
+                <button class="nav-btn" style="font-size: 8px; margin-top: 10px;">展开阅读</button>
+            </div>
+            
+            <div class="doc-card">
+                <h3># 002 Aseprite 像素画绘制流</h3>
+                <p>从 32x32 到 128x128 的调色板构建技巧与抖动(Dithering)算法在背景绘制中的应用。</p>
+                <button class="nav-btn" style="font-size: 8px; margin-top: 10px;">展开阅读</button>
+            </div>
+            </section>
+
+        <section id="projects" class="content-section">
+            <div class="doc-card">
+                <h3>VisionCore Target Locking Mechanism</h3>
+                <p>FILE: VISION_CORE/DETECTOR.cpp [Vibrant edition]</p>
+                <code>
+void TargetLock(Mat& frame) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 示例代码片段：基于深度信息的锁定补偿<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (detected && IsTargetVibrantlyLit(frame)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AimAt(target.pos_depth_compensated);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout << "[TARGET_ACQUIRED_AND_VIBRANT]" << endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+                </code>
+            </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <div class="doc-card">
+                <h2>池可 // CHIKE</h2>
+                <br>
+                <p>定位: 架构式学习者 / 视觉算法探索者 / 像素艺术爱好者</p>
+                <br>
+                <p>座右铭: "Stay colorful, but stay focused."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        --- (c) 2026 CHIKE_KERNEL -- SYSTEM_VER_2.0_EXPLORER ---
+    </footer>
+</div>
+
+<script>
+    function showSection(id) {
+        // 隐藏所有部分
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        // 取消所有按钮激活状态
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        // 显示当前部分
+        document.getElementById(id).classList.add('active');
+        // 激活对应按钮 (使用 event 对象，兼容性更佳)
+        event.currentTarget.classList.add('active');
+        
+        // 自动回到顶部，方便阅读新内容
+        document.getElementById('content-area').scrollTop = 0;
+    }
+</script>
+
+</body>
+</html>
